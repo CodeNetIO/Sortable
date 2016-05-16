@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,11 +30,28 @@ namespace Sortable.Tests
         #endregion
 
         [TestMethod]
-        public void InitiativeOrderTest()
+        public void InitiativeSortTest()
         {
             var players = CreatePlayersWithInitiatives(8);
 
              players.Sort();
+
+            for (var i = 0; i < players.Count - 1; i++)
+            {
+                if (players[i].Initiative >= players[i + 1].Initiative)
+                {
+                    Assert.Fail("Order is not ascending.");
+                }
+            }
+
+        }
+
+        [TestMethod]
+        public void InitiativeSortDescendingTest()
+        {
+            var players = CreatePlayersWithInitiatives(8);
+
+            players.Sort(new CompareInitiativeDescending());
 
             for (var i = 0; i < players.Count - 1; i++)
             {
@@ -44,8 +60,6 @@ namespace Sortable.Tests
                     Assert.Fail("Order is not descending.");
                 }
             }
-
-
 
         }
     }
