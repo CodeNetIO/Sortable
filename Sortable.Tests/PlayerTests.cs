@@ -35,11 +35,7 @@ namespace Sortable.Tests
         {
             var players = CreatePlayersWithInitiatives(8);
 
-            // sort ascending
-            // players.Sort();
-
-            // sort descending
-            players.Sort((a, b) => -1*a.CompareTo(b));
+             players.Sort();
 
             for (var i = 0; i < players.Count - 1; i++)
             {
