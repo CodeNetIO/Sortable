@@ -9,20 +9,29 @@ namespace Sortable.Tests
     public class PlayerTests
     {
         #region Utilities
-
-        private List<Player> CreatePlayersWithInitiatives(int numberOfPlayers)
+        /// <summary>
+        /// Creates players to test with
+        /// </summary>
+        /// <param name="numberOfPlayers">The number of players to create.</param>
+        /// <returns>A List of players with initiatives set.</returns>
+        private List<Player> CreatePlayers(int numberOfPlayers)
         {
-            List<Player> result = new List<Player>(numberOfPlayers);
+            var result = new List<Player>(numberOfPlayers);
 
             for (var i = 0; i < numberOfPlayers; i++)
             {
-                var initiative = new Random().Next(1,20);
-                // unique initiative
-                while (result.Any(p => p.Initiative == initiative))
+                var player = new Player();
+                player.RollInitiative();
+
+                // make sure each player has a unique initiative
+                while (result.Any(p => p.Initiative == player.Initiative))
                 {
-                    initiative = new Random().Next(1, 20);
+                    player.RollInitiative();
                 }
-                result.Add(new Player(initiative));
+
+                // get some experience
+                player.AddExperiencePoints(new Random().Next(1,1000));
+                result.Add(player);
             }
 
             return result;
@@ -30,15 +39,16 @@ namespace Sortable.Tests
         #endregion
 
         [TestMethod]
-        public void InitiativeSortTest()
+        public void DefaultSortTest()
         {
-            var players = CreatePlayersWithInitiatives(8);
+            // Sorts based on experience
+            var players = CreatePlayers(8);
 
              players.Sort();
 
             for (var i = 0; i < players.Count - 1; i++)
             {
-                if (players[i].Initiative >= players[i + 1].Initiative)
+                if (players[i].ExperiencePoints >= players[i + 1].ExperiencePoints)
                 {
                     Assert.Fail("Order is not ascending.");
                 }
@@ -49,7 +59,7 @@ namespace Sortable.Tests
         [TestMethod]
         public void InitiativeSortDescendingTest()
         {
-            var players = CreatePlayersWithInitiatives(8);
+            var players = CreatePlayers(8);
 
             players.Sort(new CompareInitiativeDescending());
 
